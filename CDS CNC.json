@@ -1,0 +1,652 @@
+{
+  "CncSystem/": {
+    "description": "Common Data structre for a CNC system",
+    "requirement": "mandatory",
+    "<CncName>/": {
+      "datatype": "String",
+      "description": "A user defined name to identify this CNC system.",
+      "requirement": "mandatory",
+
+      "CncInfo/": {
+        "description": "Contains metadata about the CNC.",
+        "requirement": "mandatory",
+        "VendorName": {
+          "datatype": "String",
+          "description": "Name of CNC system vendor. Format and content may be chosen by vendor.",
+          "requirement": "mandatory"
+        },
+        "VendorRevision": {
+          "datatype": "String",
+          "description": "Vendor revision of CNC interface. Format and content may be chosen by vendor.",
+          "requirement": "mandatory"
+        },
+        "FileSystem/": {
+          "description": "Entry point to system file directory.",
+          "requirement": "optional",
+          "FileDirectoryName": {
+            "datatype": "String",
+            "description": "path to the file directory.",
+            "requirement": "optional"
+          },
+          "FileName": {
+            "datatype": "String",
+            "description": "name of a file in a directory.",
+            "requirement": "optional"
+          }
+        },
+        "CncAlarm": {
+          "datatype": "String",
+          "description": "used to provide CNC error messages.",
+          "requirement": "optional"
+        },
+        "CncMessage": {
+          "datatype": "String",
+          "description": "used to provide general CNC messages that are not an alarm, but non-critical information, e.g. a user created message out of the CNC part program.",
+          "requirement": "optional"
+        }
+      },
+
+
+
+      "CncAxisList/": {
+        "description": "Group of CNC axis objects that are subordinated to a CncInterface.",
+        "requirement": "mandatory",
+        "<CncAxis>/": {
+          "datatype": "String",
+          "description": "CNC axis object.",
+          "requirement": "optional",
+          "ActChannel": {
+            "datatype": "String",
+            "description": "NodeId of the channel object (CncChannelType) that administrates this drive to expose drive channel affiliation. ActChannel remains empty in case of drives without channel affiliation.",
+            "requirement": "mandatory"
+          },
+          "ActLoad": {
+            "datatype": "Double",
+            "description": "Drive load actual value.",
+            "requirement": "mandatory"
+          },
+          "ActPower": {
+            "datatype": "Double",
+            "description": "Drive power actual value.",
+            "requirement": "mandatory"
+          },
+          "ActTorque": {
+            "datatype": "Double",
+            "description": "Drive torque actual value.",
+            "requirement": "mandatory"
+          },
+          "CmdTorque": {
+            "datatype": "Double",
+            "description": "Drive torque setpoint value.",
+            "requirement": "mandatory"
+          },
+          "IsInactive": {
+            "datatype": "Boolean",
+            "description": "Drive inactive state (true in case of inactive drive, else false).",
+            "requirement": "mandatory"
+          },
+          "IsVirtual": {
+            "datatype": "Boolean",
+            "description": "Virtual axis (no hardware present; true in case of virtual axis, else false).",
+            "requirement": "mandatory"
+          },
+          "ActStatus": {
+            "datatype": "UInt8",
+            "description": "Actual axis state. Possible states of a CNC axis: InPosition_0 - CNC Axis reached commanded position. Moving_1 - CNC Axis is moving to reach commanded position. Parked_2 - CNC Axis is configured but not active.",
+            "requirement": "mandatory"
+          },
+          "IsReferenced": {
+            "datatype": "Boolean",
+            "description": "Axis reference state (true in case of successfully referenced axis, else false) .",
+            "requirement": "mandatory"
+          },
+          "IsRotational": {
+            "datatype": "Boolean",
+            "description": "Axis type (true in case of rotational axis, in case of linear type or other false).",
+            "requirement": "mandatory"
+          },
+          "PosDirect/": {
+            "description": "Axis position values referring to axis' direct measurement system.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "PosIndirect/": {
+            "description": "Axis position values referring to axis' indirect measurement system.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "ZeroOffset": {
+            "datatype": "Double",
+            "description": "Active axis zero offset.",
+            "requirement": "mandatory"
+          }
+        }
+      },
+
+
+
+      "CncChannelList/": {
+        "description": "Group of CNC channel objects that are subordinated to a CncInterface.",
+        "requirement": "mandatory",
+        "<CncChannel>/": {
+          "datatype": "String",
+          "description": "CNC channel object.",
+          "requirement": "optional",
+          "Id": {
+            "datatype": "UInt32",
+            "description": "Unique numeric channel identifier.",
+            "requirement": "mandatory"
+          },
+          "CncMessage": {
+            "datatype": "String",
+            "description": "to provide channel specific information messages (for instance triggered out of CNC part program).",
+            "requirement": "optional"
+          },
+          "ActFeedrate": {
+            "datatype": "Double",
+            "description": "Feedrate actual value.",
+            "requirement": "mandatory"
+          },
+          "ActGFunctions/": {
+            "description": "Array of active G functions; there can be several G functions active at a time (modal and non-modal G functions).",
+            "requirement": "mandatory",
+            "<GFunction Name>/": {
+              "datatype": "String",
+              "description": "name identifying individual G functions.",
+              "requirement": "mandatory"
+            }
+          },
+          "ActJogIncrement": {
+            "datatype": "Double",
+            "description": "Active JOG increment, i.e. a position increment that is executed with each user jog command. Usually, there are predefined increments given (1/10, 1/100, 1/1000 position increment in the selected physical unit), but a continuous jog mode and a jog mode with variable increment are possible, too. A continuous jog mode is indicated with a jog increment value of -1, all other jog increments are given as real increments in the appropriate units.",
+            "requirement": "mandatory"
+          },
+          "ActMainProgramFile": {
+            "datatype": "String",
+            "description": "Path of active CNC main program.",
+            "requirement": "mandatory"
+          },
+          "ActMainProgramFileOffset": {
+            "datatype": "UInt32",
+            "description": "File offset of active CNC main program file (corresponds to the number of line feeds).",
+            "requirement": "optional"
+          },
+          "ActMainProgramLine": {
+            "datatype": "String",
+            "description": "Line number of active CNC main program (usually defined as N<Number>).",
+            "requirement": "optional"
+          },
+          "ActMainProgramName": {
+            "datatype": "String",
+            "description": "Name of active CNC main program.",
+            "requirement": "mandatory"
+          },
+          "ActMFunctions/": {
+            "description": "Array of active M functions: there can be several M functions active at a time (modal and non-modal M functions).",
+            "requirement": "mandatory",
+            "<MFunction Name>/": {
+              "datatype": "String",
+              "description": "name identifying individual M functions.",
+              "requirement": "mandatory"
+            }
+          },
+          "ActModalOffsetFunction": {
+            "datatype": "String",
+            "description": "Active zero offset function (usually G54, G55, G56 or G57; G53 repeals zero offsets).",
+            "requirement": "mandatory"
+          },
+          "ActOperationMode": {
+            "datatype": "UInt8",
+            "description": "Channel active mode of operation. Possible operation modes are: Manual_0 - Operation mode Manual, incremental axis movement triggered by user. MDA_1 - Operation mode MDA, manual data input and execution. Automatic_2 - Operation mode automatic, execute CNC part programs.",
+            "requirement": "mandatory"
+          },
+          "ActOverride": {
+            "datatype": "Double",
+            "description": "Axis override actual value.",
+            "requirement": "mandatory"
+          },
+          "ActProgramBlock/": {
+            "description": "Block of lines containing the previous, actual and subsequent lines of a CNC part program.",
+            "requirement": "mandatory",
+            "<Program Block Name>/": {
+              "datatype": "String",
+              "description": "name identifying current program block.",
+              "requirement": "mandatory"
+            }
+          },
+          "ActProgramFile": {
+            "datatype": "String",
+            "description": "Path of active CNC part program file (main or subprogram).",
+            "requirement": "mandatory"
+          },
+          "ActProgramFileOffset": {
+            "datatype": "UInt32",
+            "description": "File offset of active CNC part program file (main or subprogram).",
+            "requirement": "optional"
+          },
+          "ActProgramLine": {
+            "datatype": "String",
+            "description": "Line number of active CNC part program (main or subprogram).",
+            "requirement": "optional"
+          },
+          "ActProgramName": {
+            "datatype": "String",
+            "description": "Name of active CNC part program (main or subprogram).",
+            "requirement": "mandatory"
+          },
+          "ActProgramStatus": {
+            "datatype": "UInt8",
+            "description": "Active channel program status. Possible states of the CNC part program execution: Stopped_0 - Active CNC part program in channel stopped (regular stop of CNC part program execution). Running_1 - Active CNC part program in channel running (error-free execution of CNC part program). Waiting_2 - Active CNC part program in channel in waiting state(e.g. dwell time or waiting for event). Interrupted_3 - Active CNC part program in channel interrupted (e.g. due to M00 or M01 command programmed in CNC part program). Canceled_4 - Active CNC part program in channel canceled (irregular stop of CNC part program execution).",
+            "requirement": "mandatory"
+          },
+          "ActStatus": {
+            "datatype": "UInt8",
+            "description": "Active status of channel. Possible states of a CNC channel: Active_0 - Channel active (regular execution of CNC channel). Interrupted_1 - Channel interrupted (e.g. due to an error). Reset_2 - Channel resetting (activate initial state).",
+            "requirement": "mandatory"
+          },
+          "BlockMode": {
+            "datatype": "Boolean",
+            "description": "Block mode status (true in case of block mode is active, else false). With block mode active, individual program blocks are processed one by one. Each step has to be triggered by the operator.",
+            "requirement": "mandatory"
+          },
+          "CmdFeedrate": {
+            "datatype": "Double",
+            "description": "Feedrate setpoint value.",
+            "requirement": "mandatory"
+          },
+          "CmdOverride": {
+            "datatype": "Double",
+            "description": "Override setpoint value.",
+            "requirement": "mandatory"
+          },
+          "DryRunFeed": {
+            "datatype": "Double",
+            "description": "Test feedrate.",
+            "requirement": "mandatory"
+          },
+          "FeedHold": {
+            "datatype": "Boolean",
+            "description": "Feed status (true in case of feed hold active, else false).",
+            "requirement": "mandatory"
+          },
+          "PosTcpBcsA/": {
+            "description": "Actual rotation about X of the tool center point in machine Cartesian base coordinate system. The tool center point is the reference point on a tool how it is considered by the CNC tool compensation function. If there is no tool present, the tool center point is the tool carrier zero point.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "PosTcpBcsB/": {
+            "description": "Actual rotation about Y of the tool center point in machine Cartesian base coordinate system. The tool center point is the reference point on a tool how it is considered by the CNC tool compensation function. If there is no tool present, the tool center point is the tool carrier zero point.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "PosTcpBcsC/": {
+            "description": "Actual rotation about Z of the tool center point in machine Cartesian base coordinate system. The tool center point is the reference point on a tool how it is considered by the CNC tool compensation function. If there is no tool present, the tool center point is the tool carrier zero point.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "PosTcpBcsX/": {
+            "description": "Actual X position of the tool center point in machine Cartesian base coordinate system. The tool center point is the reference point on a tool how it is considered by the CNC tool compensation function. If there is no tool present, the tool center point is the tool carrier zero point.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "PosTcpBcsY/": {
+            "description": "Actual Y position of the tool center point in machine Cartesian base coordinate system. The tool center point is the reference point on a tool how it is considered by the CNC tool compensation function. If there is no tool present, the tool center point is the tool carrier zero point.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "PosTcpBcsZ/": {
+            "description": "Actual Z position of the tool center point in machine Cartesian base coordinate system. The tool center point is the reference point on a tool how it is considered by the CNC tool compensation function. If there is no tool present, the tool center point is the tool carrier zero point.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "PosTcpWcsA/": {
+            "description": "Actual rotation about X of the tool center point in machine Cartesian workpiece coordinate system. The tool center point is the reference point on a tool how it is considered by the CNC tool compensation function. If there is no tool present, the tool center point is the tool carrier zero point. Hence, the position corresponds to the position programmed in the CNC part program.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "PosTcpWcsB/": {
+            "description": "Actual rotation about Y of the tool center point in machine Cartesian workpiece coordinate system. The tool center point is the reference point on a tool how it is considered by the CNC tool compensation function. If there is no tool present, the tool center point is the tool carrier zero point. Hence, the position corresponds to the position programmed in the CNC part program.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "PosTcpWcsC/": {
+            "description": "Actual rotation about Z of the tool center point in machine Cartesian workpiece coordinate system. The tool center point is the reference point on a tool how it is considered by the CNC tool compensation function. If there is no tool present, the tool center point is the tool carrier zero point. Hence, the position corresponds to the position programmed in the CNC part program.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "PosTcpWcsX/": {
+            "description": "Actual X position of the tool center point in machine Cartesian workpiece coordinate system. The tool center point is the reference point on a tool how it is considered by the CNC tool compensation function. If there is no tool present, the tool center point is the tool carrier zero point. Hence, the position corresponds to the position programmed in the CNC part program.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "PosTcpWcsY/": {
+            "description": "Actual Y position of the tool center point in machine Cartesian workpiece coordinate system. The tool center point is the reference point on a tool how it is considered by the CNC tool compensation function. If there is no tool present, the tool center point is the tool carrier zero point. Hence, the position corresponds to the position programmed in the CNC part program.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "PosTcpWcsZ/": {
+            "description": "Actual Z position of the tool center point in machine Cartesian workpiece coordinate system. The tool center point is the reference point on a tool how it is considered by the CNC tool compensation function. If there is no tool present, the tool center point is the tool carrier zero point. Hence, the position corresponds to the position programmed in the CNC part program.",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "ToolId": {
+            "datatype": "String",
+            "description": "ID of active tool that has been selected (e.g. calling T1 in the CNC part program). Returns an empty string, if no tool is present.",
+            "requirement": "mandatory"
+          }
+        }
+
+      },
+
+
+
+      "CncSpindleList/": {
+        "description": "Group of CNC spindle objects that are subordinated to a CncInterface.",
+        "requirement": "mandatory",
+        "<CncSpindle>/": {
+          "datatype": "String",
+          "description": "CNC spindle object.",
+          "requirement": "optional",
+          "ActChannel": {
+            "datatype": "String",
+            "description": "NodeId of the channel object (CncChannelType) that administrates this drive to expose drive channel affiliation. ActChannel remains empty in case of drives without channel affiliation.",
+            "requirement": "mandatory"
+          },
+          "ActLoad": {
+            "datatype": "Double",
+            "description": "Drive load actual value.",
+            "requirement": "mandatory"
+          },
+          "ActPower": {
+            "datatype": "Double",
+            "description": "Drive power actual value.",
+            "requirement": "mandatory"
+          },
+          "ActTorque": {
+            "datatype": "Double",
+            "description": "Drive torque actual value.",
+            "requirement": "mandatory"
+          },
+          "CmdTorque": {
+            "datatype": "Double",
+            "description": "Drive torque setpoint value.",
+            "requirement": "mandatory"
+          },
+          "IsInactive": {
+            "datatype": "Boolean",
+            "description": "Drive inactive state (true in case of inactive drive, else false).",
+            "requirement": "mandatory"
+          },
+          "IsVirtual": {
+            "datatype": "Boolean",
+            "description": "Virtual axis (no hardware present; true in case of virtual axis, else false).",
+            "requirement": "mandatory"
+          },
+          "ActGear": {
+            "datatype": "UInt32",
+            "description": "Gear stage actual value.",
+            "requirement": "mandatory"
+          },
+          "ActOverride": {
+            "datatype": "Double",
+            "description": "Override actual value.",
+            "requirement": "mandatory"
+          },
+          "ActSpeed": {
+            "datatype": "Double",
+            "description": "Speed actual value.",
+            "requirement": "mandatory"
+          },
+          "ActStatus": {
+            "datatype": "UInt8",
+            "description": "Actual spindle state. Possible states of a CNC spindle: Stopped_0 - CNC Spindle stopped. InTargetArea_1 - CNC Spindle reached commanded velocity. Accelerating_2 - CNC Spindle accelerating. Decelerating_3 - CNC Spindle decelerating. Parked_4 - CNC Spindle configured but not active.",
+            "requirement": "mandatory"
+          },
+          "ActTurnDirection": {
+            "datatype": "UInt8",
+            "description": "Turn direction actual value. Possible turn directions of a CNC spindle: None_0 - No rotation. CW_1 - Clockwise. CCW_2 - Counter Clockwise.",
+            "requirement": "mandatory"
+          },
+          "AnglePos/": {
+            "description": "Spindle angular position values in case of interpolated (position controlled) spindle movement. Returns zeros in case of regular spindle operation (velocity controlled).",
+            "requirement": "mandatory",
+            "ActPos": {
+              "datatype": "Double",
+              "description": "Position current value.",
+              "requirement": "mandatory"
+            },
+            "CmdPos": {
+              "datatype": "Double",
+              "description": "Position setpoint value.",
+              "requirement": "mandatory"
+            },
+            "RemDist": {
+              "datatype": "Double",
+              "description": "Remaining distance.",
+              "requirement": "mandatory"
+            }
+          },
+          "CmdGear": {
+            "datatype": "UInt32",
+            "description": "Gear stage setpoint value.",
+            "requirement": "mandatory"
+          },
+          "CmdOverride": {
+            "datatype": "Double",
+            "description": "Override setpoint value.",
+            "requirement": "mandatory"
+          },
+          "CmdSpeed": {
+            "datatype": "Double",
+            "description": "Speed setpoint value.",
+            "requirement": "mandatory"
+          }
+        }
+      },
+
+      "User_Defined/": {
+        "description": "this is where tags and variables that don't fit into the rest of this Common Data Structure can be included. The structure here is flexible, but the user should try to keep it logical and easy to navigate. The variable/folder names created within this type should use the `Pascal_Snake_Case` naming convention with capital letters for all first letters of words with underscore delimiters for more than one word or be inherited from the device/protocol in use. Additionally, all folder structures must be delimited with a `/` character",
+        "requirement": "optional"
+      }
+
+    }
+
+
+  }  
+}
